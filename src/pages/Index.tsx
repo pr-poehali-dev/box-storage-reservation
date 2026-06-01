@@ -5,45 +5,35 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 const HERO_IMAGE = "https://cdn.poehali.dev/projects/0b562073-4296-43cc-a0fe-c24f3ec51a75/files/81c724c4-e9e4-40ce-bd90-f3e7539e8cc0.jpg";
 
 const SIZES = [
-  { id: "xs", label: "XS", name: "Малый", desc: "до 1 м³", pricePerDay: 25 },
-  { id: "s", label: "S", name: "Стандартный", desc: "1–3 м³", pricePerDay: 55 },
-  { id: "m", label: "M", name: "Средний", desc: "3–6 м³", pricePerDay: 95 },
-  { id: "l", label: "L", name: "Большой", desc: "6–12 м³", pricePerDay: 150 },
-  { id: "xl", label: "XL", name: "Макси", desc: "12–20 м³", pricePerDay: 220 },
+  { id: "standard", label: "📦", name: "Стандартный", desc: "1 коробка 60×40", pricePerDay: 50 },
 ];
 
 const MONTHS = [1, 2, 3, 6, 12];
 
 const PRICES = [
   {
-    title: "Малый",
-    size: "до 1 м³",
-    perMonth: "750",
-    perDay: "25",
-    features: ["Коробки 3–5 шт.", "Доступ в рабочее время", "Видеонаблюдение", "Страховка включена"],
+    title: "Подённо",
+    size: "1 коробка 60×40",
+    perMonth: "50 ₽/день",
+    perDay: "50",
+    features: ["Коробка 60×40 см", "Стандартный тариф", "Видеонаблюдение", "Страховка включена"],
   },
   {
-    title: "Стандарт",
-    size: "1–3 м³",
-    perMonth: "1 650",
-    perDay: "55",
+    title: "Абонемент",
+    size: "30 дней",
+    perMonth: "1 200",
+    perDay: "40",
     popular: true,
-    features: ["Коробки 10–15 шт.", "Круглосуточный доступ", "Видеонаблюдение", "Страховка включена", "Погрузка включена"],
+    features: ["1 коробка 60×40 см", "Фиксированная цена", "Видеонаблюдение", "Страховка включена", "Выгода 300 ₽ vs подённо"],
   },
-  {
-    title: "Средний",
-    size: "3–6 м³",
-    perMonth: "2 850",
-    perDay: "95",
-    features: ["Коробки 20–30 шт.", "Круглосуточный доступ", "Видеонаблюдение", "Страховка включена", "Погрузка включена", "Вывоз от двери"],
-  },
-  {
-    title: "Большой",
-    size: "6–12 м³",
-    perMonth: "4 500",
-    perDay: "150",
-    features: ["Мебель + коробки", "Круглосуточный доступ", "Видеонаблюдение", "Страховка включена", "Погрузка включена", "Вывоз от двери", "Персональный менеджер"],
-  },
+];
+
+const DELIVERY_PRICES = [
+  { title: "1 коробка", price: "1 000 ₽", desc: "Забираем у вас дома" },
+  { title: "2 коробки", price: "700 ₽", desc: "За каждую при заказе от 2 шт." },
+  { title: "3+ коробки", price: "от 200 ₽", desc: "Каждая следующая коробка" },
+  { title: "Срочный выезд", price: "3 500 ₽", desc: "Выезд в день обращения" },
+  { title: "Доставка со склада", price: "от 1 000 ₽", desc: "Возврат вещей к вам" },
 ];
 
 const STEPS = [
@@ -77,7 +67,13 @@ export default function Index() {
   const [form, setForm] = useState({ name: "", phone: "", email: "", size: "S", date: "", comment: "" });
   const [formSent, setFormSent] = useState(false);
 
-  const totalPrice = selectedSize.pricePerDay * 30 * selectedMonths;
+  const [boxCount, setBoxCount] = useState(1);
+  const pricePerDay = 50;
+  const abonnPrice = 1200;
+  const totalPriceDaily = pricePerDay * 30 * selectedMonths * boxCount;
+  const totalPriceAbonn = abonnPrice * selectedMonths * boxCount;
+  const totalPrice = selectedMonths >= 1 ? Math.min(totalPriceDaily, totalPriceAbonn) : totalPriceDaily;
+  const isAbonnBetter = totalPriceAbonn <= totalPriceDaily;
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -195,26 +191,23 @@ export default function Index() {
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
               <div className="mb-10">
-                <p className="text-navy-200 font-body text-sm uppercase tracking-widest mb-5">Размер хранения</p>
-                <div className="grid grid-cols-5 gap-2">
-                  {SIZES.map((s) => (
-                    <button
-                      key={s.id}
-                      onClick={() => setSelectedSize(s)}
-                      className={`p-3 border-2 transition-all text-center ${
-                        selectedSize.id === s.id
-                          ? "border-amber-DEFAULT bg-amber-DEFAULT text-navy-900"
-                          : "border-navy-600 text-navy-200 hover:border-amber-DEFAULT hover:text-white"
-                      }`}
-                    >
-                      <div className="font-heading text-xl font-bold">{s.label}</div>
-                      <div className="text-xs mt-1 opacity-80">{s.desc}</div>
-                    </button>
-                  ))}
+                <p className="text-navy-200 font-body text-sm uppercase tracking-widest mb-5">Количество коробок (60×40 см)</p>
+                <div className="flex items-center gap-5">
+                  <button
+                    onClick={() => setBoxCount(Math.max(1, boxCount - 1))}
+                    className="w-12 h-12 border-2 border-navy-600 text-navy-200 hover:border-amber-DEFAULT hover:text-white font-heading text-2xl transition-all"
+                  >−</button>
+                  <div className="text-center">
+                    <div className="font-heading text-5xl text-amber-DEFAULT font-bold">{boxCount}</div>
+                    <div className="text-navy-300 text-xs mt-1">{boxCount === 1 ? "коробка" : boxCount < 5 ? "коробки" : "коробок"}</div>
+                  </div>
+                  <button
+                    onClick={() => setBoxCount(boxCount + 1)}
+                    className="w-12 h-12 border-2 border-navy-600 text-navy-200 hover:border-amber-DEFAULT hover:text-white font-heading text-2xl transition-all"
+                  >+</button>
                 </div>
-                <div className="mt-4 p-4 bg-navy-800 border border-navy-600">
-                  <p className="text-white font-heading text-lg">{selectedSize.name} — {selectedSize.desc}</p>
-                  <p className="text-navy-300 text-sm mt-1">{selectedSize.pricePerDay} ₽/день</p>
+                <div className="mt-5 p-4 bg-navy-800 border border-navy-600">
+                  <p className="text-white font-heading text-base">Размер: 60×40 см · {pricePerDay} ₽/день · {abonnPrice} ₽/мес (абонемент)</p>
                 </div>
               </div>
               <div>
@@ -243,30 +236,28 @@ export default function Index() {
                 {totalPrice.toLocaleString("ru-RU")} ₽
               </div>
               <p className="text-navy-300 text-sm mb-8">
-                за {selectedMonths} {selectedMonths === 1 ? "месяц" : selectedMonths < 5 ? "месяца" : "месяцев"} · тариф «{selectedSize.name}» ({selectedSize.desc})
+                за {selectedMonths} {selectedMonths === 1 ? "месяц" : selectedMonths < 5 ? "месяца" : "месяцев"} · {boxCount} {boxCount === 1 ? "коробка" : boxCount < 5 ? "коробки" : "коробок"}
               </p>
-              <div className="border-t border-navy-600 pt-8 space-y-3 mb-8">
+              <div className="border-t border-navy-600 pt-6 space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
-                  <span className="text-navy-300">Размер</span>
-                  <span className="text-white">{selectedSize.desc}</span>
+                  <span className="text-navy-300">Коробок</span>
+                  <span className="text-white">{boxCount} шт.</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-navy-300">Цена в день</span>
-                  <span className="text-white">{selectedSize.pricePerDay} ₽</span>
+                  <span className="text-navy-300">Подённо ({pricePerDay} ₽/день)</span>
+                  <span className="text-white">{totalPriceDaily.toLocaleString("ru-RU")} ₽</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-navy-300">Срок</span>
-                  <span className="text-white">{selectedMonths * 30} дней</span>
+                  <span className="text-navy-300">Абонемент (1 200 ₽/мес)</span>
+                  <span className="text-white">{totalPriceAbonn.toLocaleString("ru-RU")} ₽</span>
                 </div>
-                {selectedMonths >= 6 && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-navy-300">Скидка</span>
-                    <span className="text-green-400">−{selectedMonths >= 12 ? "15" : "10"}%</span>
-                  </div>
-                )}
+                <div className="flex justify-between text-sm border-t border-navy-600 pt-3">
+                  <span className="text-navy-300">Выгоднее</span>
+                  <span className="text-green-400 font-heading">{isAbonnBetter ? "Абонемент" : "Подённо"}</span>
+                </div>
               </div>
               <a href="#booking" className="block w-full bg-amber-DEFAULT hover:bg-amber-dark text-navy-900 font-heading font-bold uppercase tracking-wider text-center py-4 transition-colors">
-                Забронировать этот тариф
+                Забронировать
               </a>
             </div>
           </div>
@@ -298,9 +289,9 @@ export default function Index() {
                 <h3 className={`font-heading text-2xl uppercase mb-1 ${plan.popular ? "text-white" : "text-navy-900"}`}>{plan.title}</h3>
                 <p className={`text-sm mb-6 ${plan.popular ? "text-navy-300" : "text-gray-400"}`}>{plan.size}</p>
                 <div className={`font-heading text-4xl font-bold mb-1 ${plan.popular ? "text-amber-DEFAULT" : "text-navy-900"}`}>
-                  {plan.perMonth} ₽
+                  {plan.perMonth}
                 </div>
-                <p className={`text-sm mb-8 ${plan.popular ? "text-navy-300" : "text-gray-400"}`}>в месяц · {plan.perDay} ₽/день</p>
+                <p className={`text-sm mb-8 ${plan.popular ? "text-navy-300" : "text-gray-400"}`}>{plan.perDay} ₽/день</p>
                 <ul className="space-y-2.5 flex-1 mb-8">
                   {plan.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5">
@@ -321,6 +312,20 @@ export default function Index() {
                 </a>
               </div>
             ))}
+          </div>
+
+          {/* DELIVERY PRICES */}
+          <div className="mt-12">
+            <h3 className="font-heading text-2xl text-navy-900 uppercase mb-6 text-center">Доставка и выезд</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-px bg-gray-100 border border-gray-100">
+              {DELIVERY_PRICES.map((d) => (
+                <div key={d.title} className="bg-white p-6 text-center hover:bg-navy-900 group transition-colors duration-300">
+                  <div className="font-heading text-2xl text-amber-dark group-hover:text-amber-DEFAULT font-bold mb-1 transition-colors">{d.price}</div>
+                  <div className="font-heading text-base text-navy-900 group-hover:text-white uppercase mb-2 transition-colors">{d.title}</div>
+                  <div className="text-gray-400 group-hover:text-navy-300 text-xs leading-relaxed transition-colors">{d.desc}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
