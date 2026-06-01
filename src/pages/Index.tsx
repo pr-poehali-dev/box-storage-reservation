@@ -143,7 +143,7 @@ export default function Index() {
             </div>
           </div>
           <div className="absolute bottom-8 right-8 hidden lg:grid grid-cols-3 gap-4 text-center animate-fade-in" style={{ animationDelay: "0.5s", opacity: 0 }}>
-            {[["500+", "Клиентов"], ["3", "Склада в Москве"], ["24/7", "Доступ"]].map(([num, label]) => (
+            {[["500+", "Клиентов"], ["2", "Склада в Туле"], ["24/7", "Доступ"]].map(([num, label]) => (
               <div key={label} className="bg-white/10 backdrop-blur-sm border border-white/10 px-6 py-4">
                 <div className="font-heading text-3xl text-amber-DEFAULT font-bold">{num}</div>
                 <div className="text-navy-200 text-xs mt-1 tracking-wide">{label}</div>
@@ -524,7 +524,7 @@ export default function Index() {
             {[
               { icon: "Phone", title: "Телефон", lines: ["+7 (495) 123-45-67", "Пн–Вс: 08:00–22:00"] },
               { icon: "Mail", title: "Email", lines: ["info@hlamnam.ru", "Ответим за 2 часа"] },
-              { icon: "MapPin", title: "Адрес", lines: ["Москва, ул. Складская 5", "Метро Коломенская, 5 мин"] },
+              { icon: "MapPin", title: "Адреса складов", lines: ["Тула, ул. Пролетарская 12", "Тула, ул. Металлургов 34"] },
             ].map((c) => (
               <div key={c.title} className="bg-navy-900 p-10 text-center">
                 <div className="w-14 h-14 bg-amber-DEFAULT flex items-center justify-center mx-auto mb-5">
