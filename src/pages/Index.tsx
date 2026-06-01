@@ -68,12 +68,12 @@ export default function Index() {
   const [formSent, setFormSent] = useState(false);
 
   const [boxCount, setBoxCount] = useState(1);
+  const [days, setDays] = useState(7);
   const pricePerDay = 50;
   const abonnPrice = 1200;
-  const totalPriceDaily = pricePerDay * 30 * selectedMonths * boxCount;
-  const totalPriceAbonn = abonnPrice * selectedMonths * boxCount;
-  const totalPrice = selectedMonths >= 1 ? Math.min(totalPriceDaily, totalPriceAbonn) : totalPriceDaily;
-  const isAbonnBetter = totalPriceAbonn <= totalPriceDaily;
+  const isAbonn = days >= 30;
+  const abonnMonths = Math.ceil(days / 30);
+  const totalPrice = isAbonn ? abonnPrice * abonnMonths * boxCount : pricePerDay * days * boxCount;
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -178,65 +178,80 @@ export default function Index() {
       </section>
 
       {/* CALCULATOR */}
-      <section id="calc" className="section-padding bg-navy-900">
+      <section id="calc" className="section-padding bg-navy-50">
         <div className="container-custom">
           <div className="text-center mb-16">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="h-px w-12 bg-amber-DEFAULT" />
-              <span className="text-amber-DEFAULT font-body text-sm tracking-widest uppercase">Без скрытых платежей</span>
+              <span className="text-amber-dark font-body text-sm tracking-widest uppercase">Без скрытых платежей</span>
               <div className="h-px w-12 bg-amber-DEFAULT" />
             </div>
-            <h2 className="font-heading text-4xl md:text-5xl text-white uppercase">Рассчитайте стоимость</h2>
+            <h2 className="font-heading text-4xl md:text-5xl text-navy-900 uppercase">Рассчитайте стоимость</h2>
           </div>
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
+              {/* Количество коробок */}
               <div className="mb-10">
-                <p className="text-navy-200 font-body text-sm uppercase tracking-widest mb-5">Количество коробок (60×40 см)</p>
+                <p className="text-navy-700 font-body text-sm uppercase tracking-widest mb-5">Количество коробок (60×40 см)</p>
                 <div className="flex items-center gap-5">
                   <button
                     onClick={() => setBoxCount(Math.max(1, boxCount - 1))}
-                    className="w-12 h-12 border-2 border-navy-600 text-navy-200 hover:border-amber-DEFAULT hover:text-white font-heading text-2xl transition-all"
+                    className="w-12 h-12 border-2 border-navy-300 text-navy-700 hover:border-navy-900 hover:bg-navy-900 hover:text-white font-heading text-2xl transition-all"
                   >−</button>
-                  <div className="text-center">
-                    <div className="font-heading text-5xl text-amber-DEFAULT font-bold">{boxCount}</div>
-                    <div className="text-navy-300 text-xs mt-1">{boxCount === 1 ? "коробка" : boxCount < 5 ? "коробки" : "коробок"}</div>
+                  <div className="text-center min-w-[80px]">
+                    <div className="font-heading text-5xl text-navy-900 font-bold">{boxCount}</div>
+                    <div className="text-navy-400 text-xs mt-1">{boxCount === 1 ? "коробка" : boxCount < 5 ? "коробки" : "коробок"}</div>
                   </div>
                   <button
                     onClick={() => setBoxCount(boxCount + 1)}
-                    className="w-12 h-12 border-2 border-navy-600 text-navy-200 hover:border-amber-DEFAULT hover:text-white font-heading text-2xl transition-all"
+                    className="w-12 h-12 border-2 border-navy-300 text-navy-700 hover:border-navy-900 hover:bg-navy-900 hover:text-white font-heading text-2xl transition-all"
                   >+</button>
                 </div>
-                <div className="mt-5 p-4 bg-navy-800 border border-navy-600">
-                  <p className="text-white font-heading text-base">Размер: 60×40 см · {pricePerDay} ₽/день · {abonnPrice} ₽/мес (абонемент)</p>
-                </div>
               </div>
+
+              {/* Срок в днях */}
               <div>
-                <p className="text-navy-200 font-body text-sm uppercase tracking-widest mb-5">Срок хранения</p>
-                <div className="grid grid-cols-5 gap-2">
-                  {MONTHS.map((m) => (
-                    <button
-                      key={m}
-                      onClick={() => setSelectedMonths(m)}
-                      className={`p-3 border-2 transition-all text-center ${
-                        selectedMonths === m
-                          ? "border-amber-DEFAULT bg-amber-DEFAULT text-navy-900"
-                          : "border-navy-600 text-navy-200 hover:border-amber-DEFAULT hover:text-white"
-                      }`}
-                    >
-                      <div className="font-heading text-xl font-bold">{m}</div>
-                      <div className="text-xs mt-1 opacity-80">{m === 1 ? "месяц" : m < 5 ? "месяца" : "месяцев"}</div>
-                    </button>
-                  ))}
+                <div className="flex items-center justify-between mb-5">
+                  <p className="text-navy-700 font-body text-sm uppercase tracking-widest">Срок хранения</p>
+                  <span className={`font-heading text-sm px-3 py-1 uppercase tracking-wider ${isAbonn ? "bg-amber-DEFAULT text-navy-900" : "bg-navy-900 text-white"}`}>
+                    {isAbonn ? "Абонемент" : "Подённо"}
+                  </span>
                 </div>
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="font-heading text-5xl text-navy-900 font-bold min-w-[80px]">{days}</span>
+                  <span className="text-navy-500 text-sm">{days === 1 ? "день" : days < 5 ? "дня" : "дней"}</span>
+                </div>
+                <input
+                  type="range"
+                  min={1}
+                  max={90}
+                  value={days}
+                  onChange={(e) => setDays(Number(e.target.value))}
+                  className="w-full accent-amber-DEFAULT h-2 cursor-pointer"
+                />
+                <div className="flex justify-between text-xs text-navy-400 mt-2">
+                  <span>1 день</span>
+                  <span className="text-amber-dark font-semibold">← до 29 дней подённо · от 30 дней абонемент →</span>
+                  <span>90 дней</span>
+                </div>
+                {isAbonn && (
+                  <div className="mt-4 p-3 bg-amber-DEFAULT/10 border border-amber-DEFAULT/30">
+                    <p className="text-navy-800 text-sm">
+                      <span className="font-heading uppercase text-amber-dark">Автоматически абонемент</span> — выгоднее подённого тарифа
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
-            <div className="bg-navy-800 border border-navy-600 p-10">
+
+            {/* Итог */}
+            <div className="bg-navy-900 border border-navy-700 p-10">
               <p className="text-navy-300 text-sm uppercase tracking-widest mb-3">Итого к оплате</p>
               <div className="font-heading text-6xl text-amber-DEFAULT font-bold mb-2">
                 {totalPrice.toLocaleString("ru-RU")} ₽
               </div>
               <p className="text-navy-300 text-sm mb-8">
-                за {selectedMonths} {selectedMonths === 1 ? "месяц" : selectedMonths < 5 ? "месяца" : "месяцев"} · {boxCount} {boxCount === 1 ? "коробка" : boxCount < 5 ? "коробки" : "коробок"}
+                {days} {days === 1 ? "день" : days < 5 ? "дня" : "дней"} · {boxCount} {boxCount === 1 ? "коробка" : boxCount < 5 ? "коробки" : "коробок"} · {isAbonn ? "абонемент" : "подённо"}
               </p>
               <div className="border-t border-navy-600 pt-6 space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
@@ -244,17 +259,15 @@ export default function Index() {
                   <span className="text-white">{boxCount} шт.</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-navy-300">Подённо ({pricePerDay} ₽/день)</span>
-                  <span className="text-white">{totalPriceDaily.toLocaleString("ru-RU")} ₽</span>
+                  <span className="text-navy-300">Тариф</span>
+                  <span className="text-white">{isAbonn ? `${abonnPrice} ₽/мес × ${abonnMonths} мес.` : `${pricePerDay} ₽/день × ${days} дн.`}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-navy-300">Абонемент (1 200 ₽/мес)</span>
-                  <span className="text-white">{totalPriceAbonn.toLocaleString("ru-RU")} ₽</span>
-                </div>
-                <div className="flex justify-between text-sm border-t border-navy-600 pt-3">
-                  <span className="text-navy-300">Выгоднее</span>
-                  <span className="text-green-400 font-heading">{isAbonnBetter ? "Абонемент" : "Подённо"}</span>
-                </div>
+                {!isAbonn && days >= 20 && (
+                  <div className="flex justify-between text-sm border-t border-navy-600 pt-3">
+                    <span className="text-navy-300">Совет</span>
+                    <span className="text-amber-DEFAULT text-xs">Абонемент выгоднее с 30 дня!</span>
+                  </div>
+                )}
               </div>
               <a href="#booking" className="block w-full bg-amber-DEFAULT hover:bg-amber-dark text-navy-900 font-heading font-bold uppercase tracking-wider text-center py-4 transition-colors">
                 Забронировать
