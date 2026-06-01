@@ -44,11 +44,11 @@ const STEPS = [
 ];
 
 const ADVANTAGES = [
-  { icon: "Shield", title: "Полная страховка", desc: "Все вещи застрахованы на 100% стоимости. Никаких рисков." },
+  { icon: "Shield", title: "Полная сохранность", desc: "Ваши вещи под надёжной защитой в сухом помещении." },
   { icon: "Thermometer", title: "Климат-контроль", desc: "Постоянная температура и влажность. Одежда, техника, документы в сохранности." },
   { icon: "Camera", title: "Видеонаблюдение 24/7", desc: "Охрана и камеры на каждом квадратном метре склада." },
   { icon: "Truck", title: "Забираем от двери", desc: "Приедем, упакуем и доставим на склад. Вам не нужно никуда ехать." },
-  { icon: "Key", title: "Доступ в любое время", desc: "Круглосуточный доступ к вашим вещам без записи и ожидания." },
+  { icon: "Key", title: "Доступ по звонку", desc: "Вернём ваши вещи в срок!" },
   { icon: "Banknote", title: "Без скрытых платежей", desc: "Цена фиксирована. Никаких доплат за въезд, упаковку или охрану." },
 ];
 
@@ -563,9 +563,9 @@ export default function Index() {
           </div>
           <div className="grid md:grid-cols-3 gap-px bg-navy-700">
             {[
-              { icon: "Phone", title: "Телефон", lines: ["+7 (495) 123-45-67", "Пн–Вс: 08:00–22:00"] },
+              { icon: "Phone", title: "Телефон", lines: ["8 (950) 913-19-11", "Пн–Вс: 08:00–22:00"] },
               { icon: "Mail", title: "Email", lines: ["info@hlamnam.ru", "Ответим за 2 часа"] },
-              { icon: "MapPin", title: "Адреса складов", lines: ["Тула, ул. Пролетарская 12", "Тула, ул. Металлургов 34"] },
+              { icon: "MapPin", title: "Адрес склада", lines: ["г. Тула, ул. Рязанская 20"] },
             ].map((c) => (
               <div key={c.title} className="bg-navy-900 p-10 text-center">
                 <div className="w-14 h-14 bg-amber-DEFAULT flex items-center justify-center mx-auto mb-5">
