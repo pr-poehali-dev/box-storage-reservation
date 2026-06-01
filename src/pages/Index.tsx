@@ -303,9 +303,15 @@ export default function Index() {
                 )}
                 <h3 className={`font-heading text-2xl uppercase mb-1 ${plan.popular ? "text-white" : "text-navy-900"}`}>{plan.title}</h3>
                 <p className={`text-sm mb-6 ${plan.popular ? "text-gray-300" : "text-gray-500"}`}>{plan.size}</p>
-                <div className={`font-heading text-4xl font-bold mb-1 ${plan.popular ? "text-amber-DEFAULT" : "text-navy-900"}`}>
+                <div className={`font-heading font-bold mb-1 ${plan.popular ? "text-5xl" : "text-4xl"} ${plan.popular ? "text-amber-DEFAULT" : "text-navy-900"}`}>
+                  {plan.popular && <span className="block text-xs text-gray-300 font-body font-normal tracking-widest uppercase mb-1">Цена</span>}
                   {plan.perMonth}
                 </div>
+                {plan.popular && (
+                  <div className="inline-block border border-amber-DEFAULT/40 bg-amber-DEFAULT/10 px-3 py-1 mb-3 self-start">
+                    <span className="text-amber-DEFAULT text-xs font-heading uppercase tracking-wider">Экономия 300 ₽/мес</span>
+                  </div>
+                )}
                 <p className={`text-sm mb-8 ${plan.popular ? "text-gray-300" : "text-gray-500"}`}>{plan.perDay} ₽/день</p>
                 <ul className="space-y-2.5 flex-1 mb-8">
                   {plan.features.map((f) => (
