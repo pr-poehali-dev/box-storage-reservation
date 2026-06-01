@@ -246,9 +246,11 @@ export default function Index() {
 
             {/* Итог */}
             <div className="bg-navy-900 border border-navy-700 p-10">
-              <p className="text-gray-300 text-sm uppercase tracking-widest mb-3 font-semibold">Итого к оплате</p>
-              <div className="font-heading text-6xl text-amber-DEFAULT font-bold mb-2">
-                {totalPrice.toLocaleString("ru-RU")} ₽
+              <p className="text-gray-300 text-sm uppercase tracking-widest mb-4 font-semibold">Итого к оплате</p>
+              <div className="border border-white/20 px-6 py-5 mb-4 inline-block w-full text-center">
+                <div className="font-heading text-7xl text-white font-bold leading-none">
+                  {totalPrice.toLocaleString("ru-RU")} ₽
+                </div>
               </div>
               <p className="text-gray-300 text-sm mb-8">
                 {days} {days === 1 ? "день" : days < 5 ? "дня" : "дней"} · {boxCount} {boxCount === 1 ? "коробка" : boxCount < 5 ? "коробки" : "коробок"} · {isAbonn ? "абонемент" : "подённо"}
