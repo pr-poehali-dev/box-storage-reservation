@@ -65,6 +65,7 @@ export default function Index() {
   const [selectedSize, setSelectedSize] = useState(SIZES[0]);
   const [selectedMonths, setSelectedMonths] = useState(1);
   const [form, setForm] = useState({ name: "", phone: "", email: "", size: "S", date: "", comment: "" });
+  const [consent, setConsent] = useState(false);
   const [formSent, setFormSent] = useState(false);
 
   const [boxCount, setBoxCount] = useState(1);
@@ -427,14 +428,9 @@ export default function Index() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-navy-900 font-body text-xs uppercase tracking-widest mb-2">Тариф</label>
-                      <select
-                        name="size"
-                        value={form.size}
-                        onChange={handleFormChange}
-                        className="w-full border border-gray-200 focus:border-navy-900 outline-none px-4 py-3 text-sm transition-colors bg-white appearance-none"
-                      >
-                        {SIZES.map((s) => <option key={s.id} value={s.label}>{s.label} — {s.desc}</option>)}
-                      </select>
+                      <div className="w-full border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-navy-900 font-semibold">
+                        {boxCount} {boxCount === 1 ? "коробка" : boxCount < 5 ? "коробки" : "коробок"} · {isAbonn ? "абонемент" : `${days} дн.`}
+                      </div>
                     </div>
                     <div>
                       <label className="block text-navy-900 font-body text-xs uppercase tracking-widest mb-2">Дата начала</label>
@@ -458,15 +454,28 @@ export default function Index() {
                       className="w-full border border-gray-200 focus:border-navy-900 outline-none px-4 py-3 text-sm transition-colors bg-white resize-none"
                     />
                   </div>
+                  <label className="flex items-start gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={consent}
+                      onChange={(e) => setConsent(e.target.checked)}
+                      required
+                      className="mt-0.5 w-4 h-4 accent-navy-900 flex-shrink-0 cursor-pointer"
+                    />
+                    <span className="text-gray-500 text-xs leading-relaxed group-hover:text-gray-700 transition-colors">
+                      Я даю согласие на обработку персональных данных и принимаю условия{" "}
+                      <a href="#" className="text-navy-900 underline hover:text-amber-dark transition-colors">
+                        политики конфиденциальности
+                      </a>
+                    </span>
+                  </label>
                   <button
                     type="submit"
-                    className="w-full bg-navy-900 hover:bg-navy-800 text-white font-heading uppercase tracking-wider py-4 text-sm transition-colors"
+                    disabled={!consent}
+                    className="w-full bg-navy-900 hover:bg-navy-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-heading uppercase tracking-wider py-4 text-sm transition-colors"
                   >
                     Отправить заявку
                   </button>
-                  <p className="text-gray-400 text-xs text-center">
-                    Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
-                  </p>
                 </form>
               )}
             </div>
