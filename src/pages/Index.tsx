@@ -62,7 +62,7 @@ const FAQ = [
 ];
 
 export default function Index() {
-  const [selectedSize, setSelectedSize] = useState(SIZES[1]);
+  const [selectedSize, setSelectedSize] = useState(SIZES[0]);
   const [selectedMonths, setSelectedMonths] = useState(1);
   const [form, setForm] = useState({ name: "", phone: "", email: "", size: "S", date: "", comment: "" });
   const [formSent, setFormSent] = useState(false);
@@ -98,7 +98,7 @@ export default function Index() {
           </div>
           <nav className="hidden md:flex items-center gap-8">
             {[["Как работает", "#how"], ["Цены", "#prices"], ["Калькулятор", "#calc"], ["Контакты", "#contacts"]].map(([label, href]) => (
-              <a key={href} href={href} className="text-navy-200 hover:text-amber-DEFAULT transition-colors text-sm font-body tracking-wide">
+              <a key={href} href={href} className="text-gray-300 hover:text-amber-DEFAULT transition-colors text-sm font-body tracking-wide">
                 {label}
               </a>
             ))}
@@ -126,7 +126,7 @@ export default function Index() {
               У Вас есть <span className="text-amber-DEFAULT">Хлам</span> —<br />
               отдайте его <span className="text-amber-DEFAULT">Нам!</span>
             </h1>
-            <p className="text-navy-200 text-lg md:text-xl mb-10 leading-relaxed max-w-lg">
+            <p className="text-gray-200 text-lg md:text-xl mb-10 leading-relaxed max-w-lg">
               Безопасное хранение вещей и коробок с доставкой от двери. Климат-контроль, страховка и круглосуточный доступ.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
@@ -142,7 +142,7 @@ export default function Index() {
             {[["500+", "Клиентов"], ["2", "Склада в Туле"], ["24/7", "Доступ"]].map(([num, label]) => (
               <div key={label} className="bg-white/10 backdrop-blur-sm border border-white/10 px-6 py-4">
                 <div className="font-heading text-3xl text-amber-DEFAULT font-bold">{num}</div>
-                <div className="text-navy-200 text-xs mt-1 tracking-wide">{label}</div>
+                <div className="text-gray-200 text-xs mt-1 tracking-wide">{label}</div>
               </div>
             ))}
           </div>
@@ -150,7 +150,7 @@ export default function Index() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="how" className="section-padding bg-navy-50">
+      <section id="how" className="section-padding bg-gray-50">
         <div className="container-custom">
           <div className="text-center mb-16">
             <div className="flex items-center justify-center gap-3 mb-4">
@@ -178,7 +178,7 @@ export default function Index() {
       </section>
 
       {/* CALCULATOR */}
-      <section id="calc" className="section-padding bg-navy-50">
+      <section id="calc" className="section-padding bg-gray-50">
         <div className="container-custom">
           <div className="text-center mb-16">
             <div className="flex items-center justify-center gap-3 mb-4">
@@ -300,16 +300,16 @@ export default function Index() {
                   </div>
                 )}
                 <h3 className={`font-heading text-2xl uppercase mb-1 ${plan.popular ? "text-white" : "text-navy-900"}`}>{plan.title}</h3>
-                <p className={`text-sm mb-6 ${plan.popular ? "text-navy-300" : "text-gray-400"}`}>{plan.size}</p>
+                <p className={`text-sm mb-6 ${plan.popular ? "text-gray-300" : "text-gray-500"}`}>{plan.size}</p>
                 <div className={`font-heading text-4xl font-bold mb-1 ${plan.popular ? "text-amber-DEFAULT" : "text-navy-900"}`}>
                   {plan.perMonth}
                 </div>
-                <p className={`text-sm mb-8 ${plan.popular ? "text-navy-300" : "text-gray-400"}`}>{plan.perDay} ₽/день</p>
+                <p className={`text-sm mb-8 ${plan.popular ? "text-gray-300" : "text-gray-500"}`}>{plan.perDay} ₽/день</p>
                 <ul className="space-y-2.5 flex-1 mb-8">
                   {plan.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5">
                       <Icon name="Check" size={15} className={`mt-0.5 flex-shrink-0 ${plan.popular ? "text-amber-DEFAULT" : "text-amber-dark"}`} />
-                      <span className={`text-sm ${plan.popular ? "text-navy-200" : "text-gray-600"}`}>{f}</span>
+                      <span className={`text-sm ${plan.popular ? "text-gray-200" : "text-gray-600"}`}>{f}</span>
                     </li>
                   ))}
                 </ul>
@@ -335,7 +335,7 @@ export default function Index() {
                 <div key={d.title} className="bg-white p-6 text-center hover:bg-navy-900 group transition-colors duration-300">
                   <div className="font-heading text-2xl text-amber-dark group-hover:text-amber-DEFAULT font-bold mb-1 transition-colors">{d.price}</div>
                   <div className="font-heading text-base text-navy-900 group-hover:text-white uppercase mb-2 transition-colors">{d.title}</div>
-                  <div className="text-gray-400 group-hover:text-navy-300 text-xs leading-relaxed transition-colors">{d.desc}</div>
+                  <div className="text-gray-500 group-hover:text-gray-300 text-xs leading-relaxed transition-colors">{d.desc}</div>
                 </div>
               ))}
             </div>
@@ -344,7 +344,7 @@ export default function Index() {
       </section>
 
       {/* BOOKING FORM */}
-      <section id="booking" className="section-padding bg-navy-50">
+      <section id="booking" className="section-padding bg-gray-50">
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <div>
@@ -492,7 +492,7 @@ export default function Index() {
       </section>
 
       {/* FAQ */}
-      <section className="section-padding bg-navy-50">
+      <section className="section-padding bg-gray-50">
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <div className="lg:sticky lg:top-24">
@@ -550,15 +550,15 @@ export default function Index() {
                 </div>
                 <h3 className="font-heading text-white uppercase tracking-wider mb-3">{c.title}</h3>
                 {c.lines.map((l) => (
-                  <p key={l} className="text-navy-300 text-sm mt-1">{l}</p>
+                  <p key={l} className="text-gray-300 text-sm mt-1">{l}</p>
                 ))}
               </div>
             ))}
           </div>
           <div className="mt-12 bg-navy-800 border border-navy-700 h-64 flex items-center justify-center">
             <div className="text-center">
-              <Icon name="Map" size={32} className="text-navy-500 mx-auto mb-3" />
-              <p className="text-navy-400 text-sm">Карта появится после подключения</p>
+              <Icon name="Map" size={32} className="text-gray-500 mx-auto mb-3" />
+              <p className="text-gray-400 text-sm">Карта появится после подключения</p>
             </div>
           </div>
         </div>
@@ -573,12 +573,12 @@ export default function Index() {
             </div>
             <span className="font-heading text-lg text-white tracking-wider uppercase">Хлам Нам</span>
           </div>
-          <p className="text-navy-500 text-sm text-center">
-            © 2024 Хлам Нам. Профессиональное хранение вещей в Москве.
+          <p className="text-gray-400 text-sm text-center">
+            © 2024 Хлам Нам. Профессиональное хранение вещей в Туле.
           </p>
           <div className="flex items-center gap-6">
             {["Политика конфиденциальности", "Договор оферты"].map((link) => (
-              <a key={link} href="#" className="text-navy-500 hover:text-navy-300 text-xs transition-colors">
+              <a key={link} href="#" className="text-gray-500 hover:text-gray-300 text-xs transition-colors">
                 {link}
               </a>
             ))}
