@@ -80,8 +80,14 @@ export default function Index() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const tariff = `${boxCount} ${boxCount === 1 ? "коробка" : boxCount < 5 ? "коробки" : "коробок"} · ${isAbonn ? `абонемент (${abonnMonths} мес.)` : `${days} дн. подённо`} · ${totalPrice.toLocaleString("ru-RU")} ₽`;
+    await fetch('https://functions.poehali.dev/7dc3a7d2-834f-4874-a423-9aebd5e2c7e8', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...form, tariff }),
+    });
     setFormSent(true);
   };
 
