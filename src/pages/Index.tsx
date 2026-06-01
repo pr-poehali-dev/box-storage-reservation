@@ -192,19 +192,19 @@ export default function Index() {
             <div>
               {/* Количество коробок */}
               <div className="mb-10">
-                <p className="text-navy-700 font-body text-sm uppercase tracking-widest mb-5">Количество коробок (60×40 см)</p>
+                <p className="text-navy-900 font-body text-sm uppercase tracking-widest mb-5 font-semibold">Количество коробок (60×40 см)</p>
                 <div className="flex items-center gap-5">
                   <button
                     onClick={() => setBoxCount(Math.max(1, boxCount - 1))}
-                    className="w-12 h-12 border-2 border-navy-300 text-navy-700 hover:border-navy-900 hover:bg-navy-900 hover:text-white font-heading text-2xl transition-all"
+                    className="w-12 h-12 border-2 border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white font-heading text-2xl transition-all"
                   >−</button>
                   <div className="text-center min-w-[80px]">
                     <div className="font-heading text-5xl text-navy-900 font-bold">{boxCount}</div>
-                    <div className="text-navy-400 text-xs mt-1">{boxCount === 1 ? "коробка" : boxCount < 5 ? "коробки" : "коробок"}</div>
+                    <div className="text-navy-700 text-xs mt-1 font-semibold">{boxCount === 1 ? "коробка" : boxCount < 5 ? "коробки" : "коробок"}</div>
                   </div>
                   <button
                     onClick={() => setBoxCount(boxCount + 1)}
-                    className="w-12 h-12 border-2 border-navy-300 text-navy-700 hover:border-navy-900 hover:bg-navy-900 hover:text-white font-heading text-2xl transition-all"
+                    className="w-12 h-12 border-2 border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white font-heading text-2xl transition-all"
                   >+</button>
                 </div>
               </div>
@@ -212,14 +212,14 @@ export default function Index() {
               {/* Срок в днях */}
               <div>
                 <div className="flex items-center justify-between mb-5">
-                  <p className="text-navy-700 font-body text-sm uppercase tracking-widest">Срок хранения</p>
+                  <p className="text-navy-900 font-body text-sm uppercase tracking-widest font-semibold">Срок хранения</p>
                   <span className={`font-heading text-sm px-3 py-1 uppercase tracking-wider ${isAbonn ? "bg-amber-DEFAULT text-navy-900" : "bg-navy-900 text-white"}`}>
                     {isAbonn ? "Абонемент" : "Подённо"}
                   </span>
                 </div>
                 <div className="flex items-center gap-4 mb-4">
                   <span className="font-heading text-5xl text-navy-900 font-bold min-w-[80px]">{days}</span>
-                  <span className="text-navy-500 text-sm">{days === 1 ? "день" : days < 5 ? "дня" : "дней"}</span>
+                  <span className="text-navy-700 text-sm font-semibold">{days === 1 ? "день" : days < 5 ? "дня" : "дней"}</span>
                 </div>
                 <input
                   type="range"
@@ -229,15 +229,15 @@ export default function Index() {
                   onChange={(e) => setDays(Number(e.target.value))}
                   className="w-full accent-amber-DEFAULT h-2 cursor-pointer"
                 />
-                <div className="flex justify-between text-xs text-navy-400 mt-2">
+                <div className="flex justify-between text-xs text-navy-700 mt-2 font-medium">
                   <span>1 день</span>
-                  <span className="text-amber-dark font-semibold">← до 29 дней подённо · от 30 дней абонемент →</span>
+                  <span className="text-amber-dark font-bold">← до 29 дней подённо · от 30 дней абонемент →</span>
                   <span>90 дней</span>
                 </div>
                 {isAbonn && (
-                  <div className="mt-4 p-3 bg-amber-DEFAULT/10 border border-amber-DEFAULT/30">
-                    <p className="text-navy-800 text-sm">
-                      <span className="font-heading uppercase text-amber-dark">Автоматически абонемент</span> — выгоднее подённого тарифа
+                  <div className="mt-4 p-3 bg-amber-DEFAULT border border-amber-dark">
+                    <p className="text-navy-900 text-sm font-semibold">
+                      <span className="font-heading uppercase">Автоматически абонемент</span> — выгоднее подённого тарифа
                     </p>
                   </div>
                 )}
@@ -246,26 +246,26 @@ export default function Index() {
 
             {/* Итог */}
             <div className="bg-navy-900 border border-navy-700 p-10">
-              <p className="text-navy-300 text-sm uppercase tracking-widest mb-3">Итого к оплате</p>
+              <p className="text-gray-300 text-sm uppercase tracking-widest mb-3 font-semibold">Итого к оплате</p>
               <div className="font-heading text-6xl text-amber-DEFAULT font-bold mb-2">
                 {totalPrice.toLocaleString("ru-RU")} ₽
               </div>
-              <p className="text-navy-300 text-sm mb-8">
+              <p className="text-gray-300 text-sm mb-8">
                 {days} {days === 1 ? "день" : days < 5 ? "дня" : "дней"} · {boxCount} {boxCount === 1 ? "коробка" : boxCount < 5 ? "коробки" : "коробок"} · {isAbonn ? "абонемент" : "подённо"}
               </p>
               <div className="border-t border-navy-600 pt-6 space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
-                  <span className="text-navy-300">Коробок</span>
-                  <span className="text-white">{boxCount} шт.</span>
+                  <span className="text-gray-400">Коробок</span>
+                  <span className="text-white font-semibold">{boxCount} шт.</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-navy-300">Тариф</span>
-                  <span className="text-white">{isAbonn ? `${abonnPrice} ₽/мес × ${abonnMonths} мес.` : `${pricePerDay} ₽/день × ${days} дн.`}</span>
+                  <span className="text-gray-400">Тариф</span>
+                  <span className="text-white font-semibold">{isAbonn ? `${abonnPrice} ₽/мес × ${abonnMonths} мес.` : `${pricePerDay} ₽/день × ${days} дн.`}</span>
                 </div>
                 {!isAbonn && days >= 20 && (
                   <div className="flex justify-between text-sm border-t border-navy-600 pt-3">
-                    <span className="text-navy-300">Совет</span>
-                    <span className="text-amber-DEFAULT text-xs">Абонемент выгоднее с 30 дня!</span>
+                    <span className="text-gray-300">Совет</span>
+                    <span className="text-amber-DEFAULT text-xs font-bold">Абонемент выгоднее с 30 дня!</span>
                   </div>
                 )}
               </div>
