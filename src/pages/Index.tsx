@@ -131,7 +131,7 @@ export default function Index() {
               Безопасное хранение вещей и коробок с доставкой от двери. Климат-контроль, страховка и круглосуточный доступ.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <a href="#booking" className="bg-amber-DEFAULT hover:bg-amber-dark text-navy-900 font-heading font-bold text-base px-8 py-4 uppercase tracking-wider transition-colors text-center">
+              <a href="#booking" className="border-2 border-white hover:bg-white text-white hover:text-navy-900 font-heading font-bold text-base px-8 py-4 uppercase tracking-wider transition-colors text-center">
                 Забронировать место
               </a>
               <a href="#calc" className="border border-white/30 hover:border-amber-DEFAULT text-white hover:text-amber-DEFAULT font-heading text-base px-8 py-4 uppercase tracking-wider transition-colors text-center">
