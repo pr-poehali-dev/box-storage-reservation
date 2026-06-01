@@ -7,6 +7,7 @@ export default {
 		"./components/**/*.{ts,tsx}",
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
+			"./1780344356446326202.html"
 	],
 	prefix: "",
 	theme: {
@@ -18,6 +19,10 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				heading: ['Oswald', 'sans-serif'],
+				body: ['Golos Text', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -61,6 +66,24 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				navy: {
+					50: '#f0f4fa',
+					100: '#d9e3f2',
+					200: '#b3c7e5',
+					300: '#7da2d0',
+					400: '#4d7bb8',
+					500: '#2d5a9e',
+					600: '#1e3f7a',
+					700: '#152d5e',
+					800: '#0e1e42',
+					900: '#091429',
+					950: '#050c1a',
+				},
+				amber: {
+					DEFAULT: '#F59E0B',
+					light: '#FCD34D',
+					dark: '#D97706',
 				}
 			},
 			borderRadius: {
@@ -70,25 +93,27 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'fade-in': {
+					from: { opacity: '0', transform: 'translateY(20px)' },
+					to: { opacity: '1', transform: 'translateY(0)' }
+				},
+				'slide-up': {
+					from: { opacity: '0', transform: 'translateY(40px)' },
+					to: { opacity: '1', transform: 'translateY(0)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.6s ease-out forwards',
+				'slide-up': 'slide-up 0.7s ease-out forwards',
 			}
 		}
 	},

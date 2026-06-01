@@ -1,17 +1,573 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import Icon from "@/components/ui/icon";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-const Index = () => {
+const HERO_IMAGE = "https://cdn.poehali.dev/projects/0b562073-4296-43cc-a0fe-c24f3ec51a75/files/81c724c4-e9e4-40ce-bd90-f3e7539e8cc0.jpg";
+
+const SIZES = [
+  { id: "xs", label: "XS", name: "Малый", desc: "до 1 м³", pricePerDay: 25 },
+  { id: "s", label: "S", name: "Стандартный", desc: "1–3 м³", pricePerDay: 55 },
+  { id: "m", label: "M", name: "Средний", desc: "3–6 м³", pricePerDay: 95 },
+  { id: "l", label: "L", name: "Большой", desc: "6–12 м³", pricePerDay: 150 },
+  { id: "xl", label: "XL", name: "Макси", desc: "12–20 м³", pricePerDay: 220 },
+];
+
+const MONTHS = [1, 2, 3, 6, 12];
+
+const PRICES = [
+  {
+    title: "Малый",
+    size: "до 1 м³",
+    perMonth: "750",
+    perDay: "25",
+    features: ["Коробки 3–5 шт.", "Доступ в рабочее время", "Видеонаблюдение", "Страховка включена"],
+  },
+  {
+    title: "Стандарт",
+    size: "1–3 м³",
+    perMonth: "1 650",
+    perDay: "55",
+    popular: true,
+    features: ["Коробки 10–15 шт.", "Круглосуточный доступ", "Видеонаблюдение", "Страховка включена", "Погрузка включена"],
+  },
+  {
+    title: "Средний",
+    size: "3–6 м³",
+    perMonth: "2 850",
+    perDay: "95",
+    features: ["Коробки 20–30 шт.", "Круглосуточный доступ", "Видеонаблюдение", "Страховка включена", "Погрузка включена", "Вывоз от двери"],
+  },
+  {
+    title: "Большой",
+    size: "6–12 м³",
+    perMonth: "4 500",
+    perDay: "150",
+    features: ["Мебель + коробки", "Круглосуточный доступ", "Видеонаблюдение", "Страховка включена", "Погрузка включена", "Вывоз от двери", "Персональный менеджер"],
+  },
+];
+
+const STEPS = [
+  { num: "01", icon: "Calculator", title: "Рассчитайте стоимость", desc: "Укажите размер и срок хранения — получите точную цену без скрытых платежей." },
+  { num: "02", icon: "ClipboardList", title: "Оформите заявку", desc: "Заполните форму бронирования онлайн. Это займёт 2 минуты." },
+  { num: "03", icon: "Truck", title: "Мы заберём вещи", desc: "Наша команда приедет в удобное время и аккуратно упакует всё для транспортировки." },
+  { num: "04", icon: "PackageCheck", title: "Храним и возвращаем", desc: "Вещи хранятся в безопасном складе. Верните их в любой момент по первому звонку." },
+];
+
+const ADVANTAGES = [
+  { icon: "Shield", title: "Полная страховка", desc: "Все вещи застрахованы на 100% стоимости. Никаких рисков." },
+  { icon: "Thermometer", title: "Климат-контроль", desc: "Постоянная температура и влажность. Одежда, техника, документы в сохранности." },
+  { icon: "Camera", title: "Видеонаблюдение 24/7", desc: "Охрана и камеры на каждом квадратном метре склада." },
+  { icon: "Truck", title: "Забираем от двери", desc: "Приедем, упакуем и доставим на склад. Вам не нужно никуда ехать." },
+  { icon: "Key", title: "Доступ в любое время", desc: "Круглосуточный доступ к вашим вещам без записи и ожидания." },
+  { icon: "Banknote", title: "Без скрытых платежей", desc: "Цена фиксирована. Никаких доплат за въезд, упаковку или охрану." },
+];
+
+const FAQ = [
+  { q: "Как быстро можно получить свои вещи обратно?", a: "Вы можете забрать вещи в любой рабочий день без предварительной записи. При тарифе «Стандарт» и выше — круглосуточно. Или мы доставим их к вам домой в течение суток." },
+  { q: "Что нельзя хранить на складе?", a: "Запрещено хранение продуктов питания, легковоспламеняющихся веществ, оружия и живых организмов. Всё остальное — одежда, мебель, техника, документы, коробки — принимаем без ограничений." },
+  { q: "Нужен ли договор?", a: "Да, мы заключаем официальный договор хранения с каждым клиентом. Это защищает и нас, и вас. Договор подписывается при первой передаче вещей." },
+  { q: "Как происходит оплата?", a: "Оплата производится за выбранный период вперёд — наличными, картой или переводом. При продлении срока хранения предоставляем скидку от 5% до 15%." },
+  { q: "Что если мне нужно хранить вещи дольше оплаченного срока?", a: "Просто сообщите нам за 3 дня до окончания срока. Мы автоматически продлим хранение по текущему тарифу или предложим более выгодный план." },
+  { q: "Занимаетесь ли вы упаковкой вещей?", a: "Да. Наши специалисты профессионально упакуют мебель, технику и хрупкие предметы. Упаковочные материалы — пузырчатая плёнка, стрейч, короба — предоставляются бесплатно при заказе выезда." },
+];
+
+export default function Index() {
+  const [selectedSize, setSelectedSize] = useState(SIZES[1]);
+  const [selectedMonths, setSelectedMonths] = useState(1);
+  const [form, setForm] = useState({ name: "", phone: "", email: "", size: "S", date: "", comment: "" });
+  const [formSent, setFormSent] = useState(false);
+
+  const totalPrice = selectedSize.pricePerDay * 30 * selectedMonths;
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormSent(true);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4 color-black text-black">Добро пожаловать!</h1>
-        <p className="text-xl text-gray-600">тут будет отображаться ваш проект</p>
-      </div>
-      <span className="absolute bottom-8 left-1/2 -translate-x-1/2 inline-block bg-[#FF6637] text-white text-sm px-4 py-2 rounded-full whitespace-nowrap">
-        Подождите 5 минут, Юра создает первую версию проекта с нуля
-      </span>
+    <div className="min-h-screen bg-white font-body">
+
+      {/* HEADER */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-navy-900 border-b border-navy-700">
+        <div className="container-custom flex items-center justify-between h-16 px-4 md:px-8">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-amber-DEFAULT flex items-center justify-center">
+              <Icon name="Package" size={18} className="text-navy-900" />
+            </div>
+            <span className="font-heading text-xl text-white tracking-wider uppercase">Хлам Нам</span>
+          </div>
+          <nav className="hidden md:flex items-center gap-8">
+            {[["Как работает", "#how"], ["Цены", "#prices"], ["Калькулятор", "#calc"], ["Контакты", "#contacts"]].map(([label, href]) => (
+              <a key={href} href={href} className="text-navy-200 hover:text-amber-DEFAULT transition-colors text-sm font-body tracking-wide">
+                {label}
+              </a>
+            ))}
+          </nav>
+          <a href="#booking" className="bg-amber-DEFAULT hover:bg-amber-dark text-navy-900 font-heading font-semibold text-sm px-5 py-2.5 uppercase tracking-wider transition-colors">
+            Забронировать
+          </a>
+        </div>
+      </header>
+
+      {/* HERO */}
+      <section className="relative min-h-screen flex items-center overflow-hidden pt-16">
+        <div className="absolute inset-0">
+          <img src={HERO_IMAGE} alt="Склад хранения" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-navy-950/80" />
+          <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/70 to-transparent" />
+        </div>
+        <div className="relative container-custom px-4 md:px-8 py-32">
+          <div className="max-w-2xl animate-fade-in" style={{ animationDelay: "0.1s", opacity: 0 }}>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-px w-12 bg-amber-DEFAULT" />
+              <span className="text-amber-DEFAULT font-body text-sm tracking-widest uppercase">Профессиональное хранение</span>
+            </div>
+            <h1 className="font-heading text-5xl md:text-7xl text-white uppercase leading-none mb-6">
+              Нет места<br />
+              <span className="text-amber-DEFAULT">для хлама?</span><br />
+              Мы возьмём.
+            </h1>
+            <p className="text-navy-200 text-lg md:text-xl mb-10 leading-relaxed max-w-lg">
+              Безопасное хранение вещей и коробок с доставкой от двери. Климат-контроль, страховка и круглосуточный доступ.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a href="#booking" className="bg-amber-DEFAULT hover:bg-amber-dark text-navy-900 font-heading font-bold text-base px-8 py-4 uppercase tracking-wider transition-colors text-center">
+                Забронировать место
+              </a>
+              <a href="#calc" className="border border-white/30 hover:border-amber-DEFAULT text-white hover:text-amber-DEFAULT font-heading text-base px-8 py-4 uppercase tracking-wider transition-colors text-center">
+                Рассчитать цену
+              </a>
+            </div>
+          </div>
+          <div className="absolute bottom-8 right-8 hidden lg:grid grid-cols-3 gap-4 text-center animate-fade-in" style={{ animationDelay: "0.5s", opacity: 0 }}>
+            {[["500+", "Клиентов"], ["3", "Склада в Москве"], ["24/7", "Доступ"]].map(([num, label]) => (
+              <div key={label} className="bg-white/10 backdrop-blur-sm border border-white/10 px-6 py-4">
+                <div className="font-heading text-3xl text-amber-DEFAULT font-bold">{num}</div>
+                <div className="text-navy-200 text-xs mt-1 tracking-wide">{label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section id="how" className="section-padding bg-navy-50">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-12 bg-amber-DEFAULT" />
+              <span className="text-amber-dark font-body text-sm tracking-widest uppercase">Просто и понятно</span>
+              <div className="h-px w-12 bg-amber-DEFAULT" />
+            </div>
+            <h2 className="font-heading text-4xl md:text-5xl text-navy-900 uppercase">Как это работает</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-gray-100 border border-gray-100">
+            {STEPS.map((step, i) => (
+              <div key={step.num} className="relative bg-white p-8 group hover:bg-navy-900 transition-colors duration-300">
+                <div className="font-heading text-6xl text-gray-100 group-hover:text-navy-800 transition-colors absolute top-4 right-6 leading-none select-none">
+                  {step.num}
+                </div>
+                <div className="w-12 h-12 bg-amber-DEFAULT flex items-center justify-center mb-6">
+                  <Icon name={step.icon} fallback="Box" size={22} className="text-navy-900" />
+                </div>
+                <h3 className="font-heading text-lg text-navy-900 group-hover:text-white uppercase mb-3 transition-colors">{step.title}</h3>
+                <p className="text-gray-500 group-hover:text-navy-200 text-sm leading-relaxed transition-colors">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CALCULATOR */}
+      <section id="calc" className="section-padding bg-navy-900">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-12 bg-amber-DEFAULT" />
+              <span className="text-amber-DEFAULT font-body text-sm tracking-widest uppercase">Без скрытых платежей</span>
+              <div className="h-px w-12 bg-amber-DEFAULT" />
+            </div>
+            <h2 className="font-heading text-4xl md:text-5xl text-white uppercase">Рассчитайте стоимость</h2>
+          </div>
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <div>
+              <div className="mb-10">
+                <p className="text-navy-200 font-body text-sm uppercase tracking-widest mb-5">Размер хранения</p>
+                <div className="grid grid-cols-5 gap-2">
+                  {SIZES.map((s) => (
+                    <button
+                      key={s.id}
+                      onClick={() => setSelectedSize(s)}
+                      className={`p-3 border-2 transition-all text-center ${
+                        selectedSize.id === s.id
+                          ? "border-amber-DEFAULT bg-amber-DEFAULT text-navy-900"
+                          : "border-navy-600 text-navy-200 hover:border-amber-DEFAULT hover:text-white"
+                      }`}
+                    >
+                      <div className="font-heading text-xl font-bold">{s.label}</div>
+                      <div className="text-xs mt-1 opacity-80">{s.desc}</div>
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-4 p-4 bg-navy-800 border border-navy-600">
+                  <p className="text-white font-heading text-lg">{selectedSize.name} — {selectedSize.desc}</p>
+                  <p className="text-navy-300 text-sm mt-1">{selectedSize.pricePerDay} ₽/день</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-navy-200 font-body text-sm uppercase tracking-widest mb-5">Срок хранения</p>
+                <div className="grid grid-cols-5 gap-2">
+                  {MONTHS.map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => setSelectedMonths(m)}
+                      className={`p-3 border-2 transition-all text-center ${
+                        selectedMonths === m
+                          ? "border-amber-DEFAULT bg-amber-DEFAULT text-navy-900"
+                          : "border-navy-600 text-navy-200 hover:border-amber-DEFAULT hover:text-white"
+                      }`}
+                    >
+                      <div className="font-heading text-xl font-bold">{m}</div>
+                      <div className="text-xs mt-1 opacity-80">{m === 1 ? "месяц" : m < 5 ? "месяца" : "месяцев"}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="bg-navy-800 border border-navy-600 p-10">
+              <p className="text-navy-300 text-sm uppercase tracking-widest mb-3">Итого к оплате</p>
+              <div className="font-heading text-6xl text-amber-DEFAULT font-bold mb-2">
+                {totalPrice.toLocaleString("ru-RU")} ₽
+              </div>
+              <p className="text-navy-300 text-sm mb-8">
+                за {selectedMonths} {selectedMonths === 1 ? "месяц" : selectedMonths < 5 ? "месяца" : "месяцев"} · тариф «{selectedSize.name}» ({selectedSize.desc})
+              </p>
+              <div className="border-t border-navy-600 pt-8 space-y-3 mb-8">
+                <div className="flex justify-between text-sm">
+                  <span className="text-navy-300">Размер</span>
+                  <span className="text-white">{selectedSize.desc}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-navy-300">Цена в день</span>
+                  <span className="text-white">{selectedSize.pricePerDay} ₽</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-navy-300">Срок</span>
+                  <span className="text-white">{selectedMonths * 30} дней</span>
+                </div>
+                {selectedMonths >= 6 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-navy-300">Скидка</span>
+                    <span className="text-green-400">−{selectedMonths >= 12 ? "15" : "10"}%</span>
+                  </div>
+                )}
+              </div>
+              <a href="#booking" className="block w-full bg-amber-DEFAULT hover:bg-amber-dark text-navy-900 font-heading font-bold uppercase tracking-wider text-center py-4 transition-colors">
+                Забронировать этот тариф
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PRICES */}
+      <section id="prices" className="section-padding bg-white">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-12 bg-amber-DEFAULT" />
+              <span className="text-amber-dark font-body text-sm tracking-widest uppercase">Тарифные планы</span>
+              <div className="h-px w-12 bg-amber-DEFAULT" />
+            </div>
+            <h2 className="font-heading text-4xl md:text-5xl text-navy-900 uppercase">Цены и тарифы</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-gray-100 border border-gray-100">
+            {PRICES.map((plan) => (
+              <div key={plan.title} className={`relative p-8 flex flex-col ${plan.popular ? "bg-navy-900" : "bg-white"}`}>
+                {plan.popular && (
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-amber-DEFAULT" />
+                )}
+                {plan.popular && (
+                  <div className="inline-block bg-amber-DEFAULT text-navy-900 font-heading text-xs uppercase tracking-widest px-3 py-1 mb-4 self-start">
+                    Популярный
+                  </div>
+                )}
+                <h3 className={`font-heading text-2xl uppercase mb-1 ${plan.popular ? "text-white" : "text-navy-900"}`}>{plan.title}</h3>
+                <p className={`text-sm mb-6 ${plan.popular ? "text-navy-300" : "text-gray-400"}`}>{plan.size}</p>
+                <div className={`font-heading text-4xl font-bold mb-1 ${plan.popular ? "text-amber-DEFAULT" : "text-navy-900"}`}>
+                  {plan.perMonth} ₽
+                </div>
+                <p className={`text-sm mb-8 ${plan.popular ? "text-navy-300" : "text-gray-400"}`}>в месяц · {plan.perDay} ₽/день</p>
+                <ul className="space-y-2.5 flex-1 mb-8">
+                  {plan.features.map((f) => (
+                    <li key={f} className="flex items-start gap-2.5">
+                      <Icon name="Check" size={15} className={`mt-0.5 flex-shrink-0 ${plan.popular ? "text-amber-DEFAULT" : "text-amber-dark"}`} />
+                      <span className={`text-sm ${plan.popular ? "text-navy-200" : "text-gray-600"}`}>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="#booking"
+                  className={`block w-full text-center font-heading uppercase tracking-wider text-sm py-3.5 transition-colors ${
+                    plan.popular
+                      ? "bg-amber-DEFAULT hover:bg-amber-dark text-navy-900 font-bold"
+                      : "border-2 border-navy-900 hover:bg-navy-900 hover:text-white text-navy-900"
+                  }`}
+                >
+                  Выбрать
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* BOOKING FORM */}
+      <section id="booking" className="section-padding bg-navy-50">
+        <div className="container-custom">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-px w-12 bg-amber-DEFAULT" />
+                <span className="text-amber-dark font-body text-sm tracking-widest uppercase">Онлайн бронирование</span>
+              </div>
+              <h2 className="font-heading text-4xl md:text-5xl text-navy-900 uppercase mb-6">Забронируйте<br />место прямо сейчас</h2>
+              <p className="text-gray-500 leading-relaxed mb-10">
+                Оставьте заявку — наш менеджер свяжется с вами в течение 15 минут и уточнит все детали. Без обязательств.
+              </p>
+              <div className="space-y-6">
+                {[
+                  ["Быстро", "Ответим в течение 15 минут в рабочее время"],
+                  ["Удобно", "Заберём вещи в любое удобное для вас время"],
+                  ["Надёжно", "Официальный договор и страховка каждого клиента"],
+                ].map(([title, desc]) => (
+                  <div key={title} className="flex items-start gap-4">
+                    <div className="w-1 h-12 bg-amber-DEFAULT flex-shrink-0 mt-1" />
+                    <div>
+                      <p className="font-heading text-navy-900 uppercase tracking-wide">{title}</p>
+                      <p className="text-gray-500 text-sm mt-0.5">{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-white border border-gray-100 p-10 shadow-sm">
+              {formSent ? (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-amber-DEFAULT flex items-center justify-center mx-auto mb-6">
+                    <Icon name="CheckCheck" size={28} className="text-navy-900" />
+                  </div>
+                  <h3 className="font-heading text-2xl text-navy-900 uppercase mb-3">Заявка принята!</h3>
+                  <p className="text-gray-500">Мы свяжемся с вами в течение 15 минут. Спасибо!</p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div>
+                    <label className="block text-navy-900 font-body text-xs uppercase tracking-widest mb-2">Ваше имя *</label>
+                    <input
+                      name="name"
+                      value={form.name}
+                      onChange={handleFormChange}
+                      required
+                      placeholder="Иван Иванов"
+                      className="w-full border border-gray-200 focus:border-navy-900 outline-none px-4 py-3 text-sm transition-colors bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-navy-900 font-body text-xs uppercase tracking-widest mb-2">Телефон *</label>
+                    <input
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleFormChange}
+                      required
+                      placeholder="+7 (___) ___-__-__"
+                      className="w-full border border-gray-200 focus:border-navy-900 outline-none px-4 py-3 text-sm transition-colors bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-navy-900 font-body text-xs uppercase tracking-widest mb-2">Email</label>
+                    <input
+                      name="email"
+                      type="email"
+                      value={form.email}
+                      onChange={handleFormChange}
+                      placeholder="ivan@mail.ru"
+                      className="w-full border border-gray-200 focus:border-navy-900 outline-none px-4 py-3 text-sm transition-colors bg-white"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-navy-900 font-body text-xs uppercase tracking-widest mb-2">Тариф</label>
+                      <select
+                        name="size"
+                        value={form.size}
+                        onChange={handleFormChange}
+                        className="w-full border border-gray-200 focus:border-navy-900 outline-none px-4 py-3 text-sm transition-colors bg-white appearance-none"
+                      >
+                        {SIZES.map((s) => <option key={s.id} value={s.label}>{s.label} — {s.desc}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-navy-900 font-body text-xs uppercase tracking-widest mb-2">Дата начала</label>
+                      <input
+                        name="date"
+                        type="date"
+                        value={form.date}
+                        onChange={handleFormChange}
+                        className="w-full border border-gray-200 focus:border-navy-900 outline-none px-4 py-3 text-sm transition-colors bg-white"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-navy-900 font-body text-xs uppercase tracking-widest mb-2">Комментарий</label>
+                    <textarea
+                      name="comment"
+                      value={form.comment}
+                      onChange={handleFormChange}
+                      placeholder="Расскажите, что нужно хранить..."
+                      rows={3}
+                      className="w-full border border-gray-200 focus:border-navy-900 outline-none px-4 py-3 text-sm transition-colors bg-white resize-none"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full bg-navy-900 hover:bg-navy-800 text-white font-heading uppercase tracking-wider py-4 text-sm transition-colors"
+                  >
+                    Отправить заявку
+                  </button>
+                  <p className="text-gray-400 text-xs text-center">
+                    Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
+                  </p>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ADVANTAGES */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-12 bg-amber-DEFAULT" />
+              <span className="text-amber-dark font-body text-sm tracking-widest uppercase">Почему мы</span>
+              <div className="h-px w-12 bg-amber-DEFAULT" />
+            </div>
+            <h2 className="font-heading text-4xl md:text-5xl text-navy-900 uppercase">Наши преимущества</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-100 border border-gray-100">
+            {ADVANTAGES.map((adv) => (
+              <div key={adv.title} className="bg-white p-8 group hover:bg-navy-900 transition-colors duration-300">
+                <div className="w-12 h-12 border-2 border-navy-900 group-hover:border-amber-DEFAULT flex items-center justify-center mb-6 transition-colors">
+                  <Icon name={adv.icon} fallback="Star" size={20} className="text-navy-900 group-hover:text-amber-DEFAULT transition-colors" />
+                </div>
+                <h3 className="font-heading text-lg text-navy-900 group-hover:text-white uppercase mb-3 transition-colors">{adv.title}</h3>
+                <p className="text-gray-500 group-hover:text-navy-300 text-sm leading-relaxed transition-colors">{adv.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="section-padding bg-navy-50">
+        <div className="container-custom">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            <div className="lg:sticky lg:top-24">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-px w-12 bg-amber-DEFAULT" />
+                <span className="text-amber-dark font-body text-sm tracking-widest uppercase">Частые вопросы</span>
+              </div>
+              <h2 className="font-heading text-4xl md:text-5xl text-navy-900 uppercase mb-6">Всё, что<br />нужно знать</h2>
+              <p className="text-gray-500 leading-relaxed">
+                Собрали ответы на самые популярные вопросы. Если не нашли нужного — напишите нам напрямую.
+              </p>
+              <a href="#contacts" className="inline-flex items-center gap-2 mt-8 text-navy-900 font-heading uppercase text-sm tracking-wider border-b-2 border-amber-DEFAULT pb-0.5 hover:border-navy-900 transition-colors">
+                Задать вопрос
+                <Icon name="ArrowRight" size={16} />
+              </a>
+            </div>
+            <div>
+              <Accordion type="single" collapsible className="space-y-2">
+                {FAQ.map((item, i) => (
+                  <AccordionItem key={i} value={`item-${i}`} className="bg-white border border-gray-100 px-6">
+                    <AccordionTrigger className="font-heading text-navy-900 uppercase text-sm tracking-wide py-5 hover:no-underline text-left">
+                      {item.q}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-gray-500 text-sm leading-relaxed pb-5">
+                      {item.a}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACTS */}
+      <section id="contacts" className="section-padding bg-navy-900">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-12 bg-amber-DEFAULT" />
+              <span className="text-amber-DEFAULT font-body text-sm tracking-widest uppercase">Свяжитесь с нами</span>
+              <div className="h-px w-12 bg-amber-DEFAULT" />
+            </div>
+            <h2 className="font-heading text-4xl md:text-5xl text-white uppercase">Контакты</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-px bg-navy-700">
+            {[
+              { icon: "Phone", title: "Телефон", lines: ["+7 (495) 123-45-67", "Пн–Вс: 08:00–22:00"] },
+              { icon: "Mail", title: "Email", lines: ["info@hlamnam.ru", "Ответим за 2 часа"] },
+              { icon: "MapPin", title: "Адрес", lines: ["Москва, ул. Складская 5", "Метро Коломенская, 5 мин"] },
+            ].map((c) => (
+              <div key={c.title} className="bg-navy-900 p-10 text-center">
+                <div className="w-14 h-14 bg-amber-DEFAULT flex items-center justify-center mx-auto mb-5">
+                  <Icon name={c.icon} fallback="Info" size={24} className="text-navy-900" />
+                </div>
+                <h3 className="font-heading text-white uppercase tracking-wider mb-3">{c.title}</h3>
+                {c.lines.map((l) => (
+                  <p key={l} className="text-navy-300 text-sm mt-1">{l}</p>
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className="mt-12 bg-navy-800 border border-navy-700 h-64 flex items-center justify-center">
+            <div className="text-center">
+              <Icon name="Map" size={32} className="text-navy-500 mx-auto mb-3" />
+              <p className="text-navy-400 text-sm">Карта появится после подключения</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="bg-navy-950 py-10 px-4 md:px-8">
+        <div className="container-custom flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 bg-amber-DEFAULT flex items-center justify-center">
+              <Icon name="Package" size={15} className="text-navy-900" />
+            </div>
+            <span className="font-heading text-lg text-white tracking-wider uppercase">Хлам Нам</span>
+          </div>
+          <p className="text-navy-500 text-sm text-center">
+            © 2024 Хлам Нам. Профессиональное хранение вещей в Москве.
+          </p>
+          <div className="flex items-center gap-6">
+            {["Политика конфиденциальности", "Договор оферты"].map((link) => (
+              <a key={link} href="#" className="text-navy-500 hover:text-navy-300 text-xs transition-colors">
+                {link}
+              </a>
+            ))}
+          </div>
+        </div>
+      </footer>
     </div>
   );
-};
-
-export default Index;
+}
