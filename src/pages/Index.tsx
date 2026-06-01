@@ -127,9 +127,8 @@ export default function Index() {
               <span className="text-amber-DEFAULT font-body text-sm tracking-widest uppercase">Профессиональное хранение</span>
             </div>
             <h1 className="font-heading text-5xl md:text-7xl text-white uppercase leading-none mb-6">
-              Нет места<br />
-              <span className="text-amber-DEFAULT">для хлама?</span><br />
-              Мы возьмём.
+              У Вас есть <span className="text-amber-DEFAULT">Хлам</span> —<br />
+              отдайте его <span className="text-amber-DEFAULT">Нам!</span>
             </h1>
             <p className="text-navy-200 text-lg md:text-xl mb-10 leading-relaxed max-w-lg">
               Безопасное хранение вещей и коробок с доставкой от двери. Климат-контроль, страховка и круглосуточный доступ.
